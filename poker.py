@@ -25,18 +25,18 @@ flop = deck.deal(3)
 turn = deck.deal(1)
 river = deck.deal(1)
 
-print("Hand: ")
-for card in player_hand:
-    print(card)
+# print("Hand: ")
+# for card in player_hand:
+#     print(card)
 
-print("Flop: ")
-for card in flop:
-    print(card)
+# print("Flop: ")
+# for card in flop:
+#     print(card)
 
-print("Turn: ")
-for card in turn:
-    print(card)
+# print("Turn: ")
+# for card in turn:
+#    print(card)
 
-print("River: ")
-for card in river:
-    print(card)
+# print("River: ")
+# for card in river:
+#     print(card)
