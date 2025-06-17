@@ -15,15 +15,37 @@ def evaluate_hands(cards):
     if is_flush and set(values) == {10, 11, 12, 13, 14}:
         return ("Royal Flush", values[-1])
     
+    #Straight Flush
+    if is_flush and is_straight:
+        return("Straight Flush", values[-1])
+    
+    #Four of a Kind
+    if 4 in value_counts.values():
+        quad_value = [k for k, v in value_counts.items() if v == 4] [0]
+        return("Four of a Kind", quad_value)
+    
+    #Full House
+    if sorted(value_counts.values()) == [2, 3]:
+        trio_value = [k for k, v in value_counts.items() if v == 3] [0]
+        return("Full House", trio_value)
+    
+    #Flush
+    if is_flush:
+        return("Flush", values[-1])
+    
+    #Straight
+    if is_straight:
+        return("Straight", values[-1])
+    
 hand = [ 
-    Card('♥', 'Q'),
-    Card('♥', 'K'),
-    Card('♥', 'A'),
-    Card('♥', 10),
-    Card('♥', 'J'),
+    Card('♥', 4),
+    Card('♥', 8),
+    Card('♥', 6),
+    Card('♥', 2),
+    Card('♥', 5),
     ]
 
-# result = evaluate_hands(hand)
-# print(f"Hand: {result[0]} value {result[1]}")
+result = evaluate_hands(hand)
+print(f"Hand: {result[0]} value {result[1]}")
 
     
