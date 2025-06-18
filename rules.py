@@ -1,7 +1,6 @@
 import random
 from collections import Counter
-from poker import Card
-from poker import Deck
+from poker import Card, Deck
 
 def evaluate_hands(cards):
     values = sorted([card.rank if isinstance(card.rank, int) else{'J':11, 'Q':12, 'K': 13, 'A': 14}[card.rank] for card in cards])
@@ -37,15 +36,33 @@ def evaluate_hands(cards):
     if is_straight:
         return("Straight", values[-1])
     
-hand = [ 
-    Card('♥', 4),
-    Card('♥', 8),
-    Card('♥', 6),
-    Card('♥', 2),
-    Card('♥', 5),
-    ]
+    #Three of a Kind
+    if 3 in value_counts.values():
+        three_value = [k for k, v in value_counts.items() if v == 3] [0]
+        return("Three of a Kind", three_value)
+    
+    #Two Pair
+    if list(value_counts.values()).count(2) == 2:
+        pairs = sorted([k for k, v in value_counts.items() if v == 2], reverse=True)
+        return("Two Pairs", pairs)
+    
+    #One Pair
+    if 2 in value_counts.values():
+        two_value = [k for k, v in value_counts.items() if v == 2] [0]
+        return("One Pair", two_value)
+    
+    #High Card
+    return("High Card", values[-1])
 
-result = evaluate_hands(hand)
-print(f"Hand: {result[0]} value {result[1]}")
+# hand = [ 
+#     Card('♥', 'A'),
+#     Card('♣', 'J'),
+#     Card('♥', 5),
+#     Card('♠', 4),
+#     Card('♥', 3),
+#     ]
+
+# result = evaluate_hands(hand)
+# print(f"Hand: {result[0]} value {result[1]}")
 
     
