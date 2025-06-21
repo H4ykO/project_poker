@@ -1,5 +1,6 @@
 from poker import Card, Deck
 from rules import evaluate_hands
+from rules import HAND_RANKINGS
 
 deck = Deck()
 player_hand = deck.deal(2)
@@ -20,4 +21,4 @@ for i, card in enumerate(table_cards):
 
 all_cards = player_hand + table_cards
 result = evaluate_hands(all_cards)
-print(f"\nHand: {result[0]} value {result[1]}")
+print(f"\nHand: {result[0]} (Score: {HAND_RANKINGS[result[0]]}) Value: {result[1]}")
