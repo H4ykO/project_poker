@@ -69,6 +69,20 @@ def evaluate_hands(cards):
     #High Card
     return("High Card", values[-1])
 
+def get_valid_bet(prompt):
+    while True:
+        user_input = input(prompt).strip().lower()
+
+        if user_input == 'check':
+            return 0
+        try:
+            bet = int(user_input)
+            if bet >= 0:
+                return bet
+            print("Please enter a positive number!")
+        except ValueError:
+            print("Please enter a valid number!")
+
 # hand = [ 
 #     Card('♥', 5),
 #     Card('♣', 3),

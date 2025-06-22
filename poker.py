@@ -19,6 +19,10 @@ class Deck:
     def deal(self, num_cards):
         return [self.cards.pop() for _ in range(num_cards)]
     
+# class Chips:
+#     def __init__(self):
+#         chips = {'White':1, 'Red':5, 'Green':25, 'Blue':20, 'Black':100}
+
 # deck = Deck()
 # player_hand = deck.deal(2)
 # flop = deck.deal(3)
