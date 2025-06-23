@@ -1,32 +1,41 @@
-import random
-from collections import Counter
+from classes import Deck
+from rules import evaluate_hands, HAND_RANKINGS, get_valid_bet
 
-class Card:
-    def __init__(self, suit, rank):
-        self.suit = suit
-        self.rank = rank
+def main():
+    deck = Deck()
+    player_hand = deck.deal(2)
+    table_cards = deck.deal(5)
+    pot = []
 
-    def __str__(self):
-        return f"{self.rank} {self.suit}"
+    print("\nHand: ")
+    for card in player_hand:
+        print(f"{card.rank} of {card.suit}")
+
+    pot.append(get_valid_bet("\nPlace your initial bet: "))
+    print(f"Current pot: {sum(pot)}")
+
+    print("\nFlop:")
+    for i in range(3):
+        print(f"{table_cards[i].rank} of {table_cards[i].suit}")
     
-class Deck:
-    def __init__(self):
-        suits = ['♦', '♠', '♥', '♣']
-        ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A']
-        self.cards = [Card(suit, rank) for suit in suits for rank in ranks]
-        random.shuffle(self.cards)
+    #Flop
+    pot.append(get_valid_bet("\nPlace your bet after Flop: "))
+    print(f"Current pot: {sum(pot)}")
 
-    def deal(self, num_cards):
-        return [self.cards.pop() for _ in range(num_cards)]
-    
-# class Chips:
-#     def __init__(self):
-#         chips = {'White':1, 'Red':5, 'Green':25, 'Blue':20, 'Black':100}
+    #Turn
+    print(f"\nTurn: {table_cards[3].rank} of {table_cards[3].suit}")
+    pot.append(get_valid_bet("Place your bet after Turn: "))
+    print(f"Current pot: {sum(pot)}")
 
-# deck = Deck()
-# player_hand = deck.deal(2)
-# flop = deck.deal(3)
-# turn = deck.deal(1)
-# river = deck.deal(1)
+    #River
+    print(f"\nRiver: {table_cards[4].rank} of {table_cards[4].suit}")
+    pot.append(get_valid_bet("Place your bet after River: "))
+    print(f"Current pot: {sum(pot)}")
 
+    all_cards = player_hand + table_cards
+    result = evaluate_hands(all_cards)
+    print(f"\nHand: {result[0]} (Score: {HAND_RANKINGS[result[0]]}) Value: {result[1]}")
+    print(f"Total pot: {sum(pot)}")
 
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,6 @@
 import random
 from collections import Counter
-from poker import Card, Deck
+from classes import Card, Deck
 
 HAND_RANKINGS = {
     "Royal Flush": 10,
