@@ -1,6 +1,15 @@
 import random
 from collections import Counter
-from classes import Card, Deck
+from classes import Card, Deck, Chip, ChipStack
+
+CHIP_VALUES = {
+        'White': 1,
+        'Red': 5,
+        'Green': 25,
+        'Black': 100,
+        'Purple': 500,
+        'Yellow': 1000
+    }
 
 HAND_RANKINGS = {
     "Royal Flush": 10,
