@@ -43,8 +43,41 @@ class ChipStack:
     def __init__(self, chips):
         self.chips = chips
     
-    def value(self):
-        return sum(chip.value for chip in self.chips)
+    def add_chips(self, color, quantity):
+        for _ in range(quantity):
+            self.chips.append(Chip(color))
+        self._update_total()
+
+    def remove_chips(self, color, quantity):
+        removed = []
+        remaining = quantity
+    
+        chips_of_color = [chip for chip in self.chips if chip.color == color]
+
+        if len(chips_of_color) < quantity:
+            raise ValueError(f"insuficient chips, trying to remove {quantity}x {color}, but only has {len{chips_of_color}}")
+        
+        for chip in self.chips[:]:
+            if chip.color == color and remaining > 0:
+                self.chips.remove(chip)
+                removed.append(chip)
+                remaining -= 1
+        
+        self._update_total()
+        return removed
+    
+    def _update_total(self):
+        self.total_value = sum(chip.value for chip in self.chips)
+
+    def get_chip_count(self):
+        count = []
+        for chip in self.chips:
+            count[chip.color] = count.get(chip.color, 0) + 1
+            return count
+        
+    def __str__(self):
+        counts = self.get_chip_count()
+        return "\n" .join([f"{count}x {color}" for color, count in counts.items()]) +f"\nTotal: ${self.total_value}"
         
 
 
