@@ -2,22 +2,25 @@ from classes import Deck, Player, Chip, ChipStack
 from rules import evaluate_hand, HAND_RANKINGS
 
 def get_chip_bet(player_stack):
-    print("\nFichas disponíveis:")
+    print("\nAvaliable Chips:")
     print(player_stack)
     
     while True:
-        color = input("Cor da ficha (White/Red/Green/Blue/Black/Purple/Yellow): ").capitalize()
+        color = input("Chip color (White/Red/Green/Blue/Black/Purple/Yellow): ").capitalize()
         try:
-            quantity = int(input("Quantidade: "))
+            quantity = int(input("Quantity: "))
             removed_chips = player_stack.remove_chips(color, quantity)
             bet_value = sum(chip.value for chip in removed_chips)
-            print(f"Apostou ${bet_value} em fichas {color}")
+            print(f"Bet ${bet_value} {color} chips")
             return removed_chips
         except ValueError as e:
-            print(f"Erro: {e}. Tente novamente.")
+            print(f"Error: {e}. Try again.")
+
+def initial_stack(options):
+    stack = input("")
 
 def main():
-    player = Player("Jogador", {'White': 10, 'Red': 5, 'Green': 2})
+    player = Player("Player", stack_size='$100')
     deck = Deck()
     pot = ChipStack()
 
@@ -27,7 +30,7 @@ def main():
     revealed_cards = []
 
     betting_rounds = [
-        ("Pré-flop", 0),  
+        ("Initial bet", 0),  
         ("Flop", 3),      
         ("Turn", 1),      
         ("River", 1)      
@@ -41,13 +44,13 @@ def main():
             end_idx = start_idx + new_cards_count
             revealed_cards.extend(table_cards[start_idx:end_idx])
 
-        if round_name == "Pré-flop":
-            print("Sua mão:")
+        if round_name == "Initial bet":
+            print("Hand:")
             for card in player.hand:
                 print(card)
         
         if revealed_cards:
-            print("\nCartas na mesa:")
+            print("\nCards on table:")
             for i, card in enumerate(revealed_cards):
                 print(f"{card}")
         
@@ -60,15 +63,15 @@ def main():
     all_cards = player.hand + table_cards
     result = evaluate_hand(all_cards)
     
-    print("\n=== Resultado Final ===")
-    print("Sua mão final:")
+    print("\n=== Showdown ===")
+    print("Final Hand:")
     for card in player.hand:
         print(card)
-    print("\nCartas na mesa:")
+    print("\nCards on table:")
     for card in table_cards:
         print(card)
-    print(f"\nMelhor mão: {result[0]} (valor: {result[1]})")
-    print(f"Você ganhou ${pot.total_value}!")
+    print(f"\nBest hand: {result[0]} (value: {result[1]})")
+    print(f"You won ${pot.total_value}!")
 
 if __name__ == "__main__":
     main()

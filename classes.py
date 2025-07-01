@@ -83,12 +83,25 @@ class ChipStack:
         return "\n".join([f"{count}x {color}" for color, count in counts.items()]) + f"\nTotal: ${self.total_value}"
 
 class Player:
-    def __init__(self, name, initial_chips):
+    INITIAL_STACKS = {
+        '$25': {'White': 5, 'Red': 4},        
+        '$50': {'White': 10, 'Red': 6, 'Green': 1},  
+        '$100': {'Red': 10, 'Green': 2, 'Black': 1}, 
+        '$200': {'Green': 4, 'Black': 2},       
+        '$500': {'Black': 5},                   
+        '$1000': {'Purple': 2}                 
+    }
+
+    def __init__(self, name, stack_size='$100'):
         self.name = name
         self.stack = ChipStack()
         self.hand = []
         self.bet = 0
         
+        if stack_size not in self.INITIAL_STACKS:
+            raise ValueError(f"Tamanho de stack inválido. Opções: {list(self.INITIAL_STACKS.keys())}")
+        
+        initial_chips = self.INITIAL_STACKS[stack_size]
         for color, quantity in initial_chips.items():
             self.stack.add_chips(color, quantity)
     
@@ -104,6 +117,7 @@ class Player:
     def show_stack(self):
         print(f"\nFichas de {self.name}:")
         print(self.stack)
+
 
 
 

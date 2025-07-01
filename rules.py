@@ -14,6 +14,7 @@ HAND_RANKINGS = {
     "High Card": 1
 }
 
+
 def evaluate_hand(cards):
     rank_map = {'J':11, 'Q':12, 'K':13, 'A':14}
     values = []
@@ -74,6 +75,7 @@ def evaluate_hand(cards):
     
     # High Card
     return ("High Card", values[-1])
+
 
 # hand = [ 
 #     Card('♥', 5),
