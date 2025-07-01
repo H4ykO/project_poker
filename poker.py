@@ -16,11 +16,8 @@ def get_chip_bet(player_stack):
         except ValueError as e:
             print(f"Error: {e}. Try again.")
 
-def initial_stack(options):
-    stack = input("")
-
 def main():
-    player = Player("Player", stack_size='$100')
+    player = Player.create_player()
     deck = Deck()
     pot = ChipStack()
 

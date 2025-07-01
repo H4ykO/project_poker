@@ -1,5 +1,6 @@
 import random
 from collections import Counter
+from colorama import Fore, Style
 
 class Card:
     def __init__(self, suit, rank):
@@ -117,6 +118,31 @@ class Player:
     def show_stack(self):
         print(f"\nFichas de {self.name}:")
         print(self.stack)
+
+    @classmethod
+    def show_available_stacks(cls):
+        print("Stacks disponíveis:")
+        for stack in cls.INITIAL_STACKS:
+            print(f"- {stack}")
+
+    def create_player():
+        name = input("Your name: ")
+    
+        while True:
+            try:
+                print(f"\n{Fore.YELLOW}Available starting stacks:{Style.RESET_ALL}")
+                Player.show_available_stacks()
+            
+                stack = input(f"{Fore.GREEN}Choose your stack:{Style.RESET_ALL} ").strip()
+            
+                player = Player(name, stack)
+                print(f"\n{Fore.CYAN}Player {name} created with {stack} stack{Style.RESET_ALL}")
+                return player
+            
+            except ValueError as e:
+                print(f"\n{Fore.RED}Error:{Style.RESET_ALL} {e}")
+            
+        
 
 
 
