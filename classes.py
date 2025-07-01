@@ -8,7 +8,7 @@ class Card:
 
     def __str__(self):
         return f"{self.rank} {self.suit}"
-    
+
 class Deck:
     def __init__(self):
         suits = ['♦', '♠', '♥', '♣']
@@ -18,30 +18,39 @@ class Deck:
 
     def deal(self, num_cards):
         return [self.cards.pop() for _ in range(num_cards)]
-    
-class Chip:
 
+class Chip:
+    CHIP_VALUES = {
+        'White': 1,
+        'Red': 5,
+        'Green': 25,
+        'Blue': 50,
+        'Black': 100,
+        'Purple': 500,
+        'Yellow': 1000
+    }
+    
     def __init__(self, color):
         if color not in self.CHIP_VALUES:
-            raise ValueError(f"Cor de ficha inválida. Cores disponíveis: {list(self.CHIP_VALUES.keys())}")
-        
+            raise ValueError(f"Cor inválida. Opções: {list(self.CHIP_VALUES.keys())}")
         self.color = color
         self.value = self.CHIP_VALUES[color]
-
+    
     def __str__(self):
-        return f"{self.color} chip (${self.value})"
+        return f"{self.color} (${self.value})"
     
     def __repr__(self):
         return f"Chip('{self.color}')"
     
     def __eq__(self, other):
         if isinstance(other, Chip):
-            return self.color == other.color
+            return self.color == other.color and self.value == other.value
         return False
 
 class ChipStack:
-    def __init__(self, chips):
-        self.chips = chips
+    def __init__(self, chips=None):
+        self.chips = chips if chips else []
+        self._update_total()
     
     def add_chips(self, color, quantity):
         for _ in range(quantity):
@@ -50,18 +59,15 @@ class ChipStack:
 
     def remove_chips(self, color, quantity):
         removed = []
-        remaining = quantity
-    
         chips_of_color = [chip for chip in self.chips if chip.color == color]
-
+        
         if len(chips_of_color) < quantity:
-            raise ValueError(f"insuficient chips, trying to remove {quantity}x {color}, but only has {len{chips_of_color}}")
+            raise ValueError(f"Fichas insuficientes. Tentando remover {quantity}x {color}, mas só tem {len(chips_of_color)}")
         
         for chip in self.chips[:]:
-            if chip.color == color and remaining > 0:
+            if chip.color == color and len(removed) < quantity:
                 self.chips.remove(chip)
                 removed.append(chip)
-                remaining -= 1
         
         self._update_total()
         return removed
@@ -70,14 +76,38 @@ class ChipStack:
         self.total_value = sum(chip.value for chip in self.chips)
 
     def get_chip_count(self):
-        count = []
-        for chip in self.chips:
-            count[chip.color] = count.get(chip.color, 0) + 1
-            return count
+        return Counter(chip.color for chip in self.chips)
         
     def __str__(self):
         counts = self.get_chip_count()
-        return "\n" .join([f"{count}x {color}" for color, count in counts.items()]) +f"\nTotal: ${self.total_value}"
+        return "\n".join([f"{count}x {color}" for color, count in counts.items()]) + f"\nTotal: ${self.total_value}"
+
+class Player:
+    def __init__(self, name, initial_chips):
+        self.name = name
+        self.stack = ChipStack()
+        self.hand = []
+        self.bet = 0
+        
+        for color, quantity in initial_chips.items():
+            self.stack.add_chips(color, quantity)
+    
+    def place_bet(self, color, quantity):
+        try:
+            removed_chips = self.stack.remove_chips(color, quantity)
+            self.bet += sum(chip.value for chip in removed_chips)
+            return removed_chips
+        except ValueError as e:
+            print(f"Erro ao apostar: {e}")
+            return None
+        
+    def show_stack(self):
+        print(f"\nFichas de {self.name}:")
+        print(self.stack)
+
+
+
+
         
 
 

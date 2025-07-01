@@ -1,15 +1,5 @@
-import random
 from collections import Counter
-from classes import Card, Deck, Chip, ChipStack
-
-CHIP_VALUES = {
-        'White': 1,
-        'Red': 5,
-        'Green': 25,
-        'Black': 100,
-        'Purple': 500,
-        'Yellow': 1000
-    }
+from classes import Card
 
 HAND_RANKINGS = {
     "Royal Flush": 10,
@@ -24,73 +14,66 @@ HAND_RANKINGS = {
     "High Card": 1
 }
 
-def evaluate_hands(cards):
-    rank_map = {'J':11, 'Q':12, 'K': 13, 'A': 14}
-    values = sorted([card.rank if isinstance(card.rank, int) else rank_map[card.rank] for card in cards])
+def evaluate_hand(cards):
+    rank_map = {'J':11, 'Q':12, 'K':13, 'A':14}
+    values = []
+    
+    for card in cards:
+        if isinstance(card.rank, int):
+            values.append(card.rank)
+        else:
+            values.append(rank_map[card.rank])
+    
+    values = sorted(values)
     suits = [card.suit for card in cards]
     value_counts = Counter(values)
-
     is_flush = len(set(suits)) == 1
     is_straight = (values[-1] - values[0] == 4) and (len(set(values)) == 5)
     is_special_straight = set(values) == {2, 3, 4, 5, 14}
 
-    #Royal Flush
+    # Royal Flush
     if is_flush and set(values) == {10, 11, 12, 13, 14}:
         return ("Royal Flush", 14)
     
-    #Straight Flush
+    # Straight Flush
     if is_flush and (is_straight or is_special_straight):
-        return("Straight Flush", 5 if is_special_straight else values[-1])
+        return ("Straight Flush", 5 if is_special_straight else values[-1])
     
-    #Four of a Kind
+    # Four of a Kind
     if 4 in value_counts.values():
         quad_value = next(k for k, v in value_counts.items() if v == 4)
-        return("Four of a Kind", quad_value)
+        return ("Four of a Kind", quad_value)
     
-    #Full House
+    # Full House
     if sorted(value_counts.values()) == [2, 3]:
         trio_value = next(k for k, v in value_counts.items() if v == 3)
         pair_value = next(k for k, v in value_counts.items() if v == 2)
-        return("Full House", (trio_value, pair_value))
+        return ("Full House", (trio_value, pair_value))
     
-    #Flush
+    # Flush
     if is_flush:
-        return("Flush", values[-1])
+        return ("Flush", values[-1])
     
-    #Straight
+    # Straight
     if is_straight or is_special_straight:
-        return("Straight", 5 if is_special_straight else values[-1])
-     
-    #Three of a Kind
-    if 3 in value_counts.values():
-        three_value = next(k for k, v in value_counts.items() if v == 3)
-        return("Three of a Kind", three_value)
+        return ("Straight", 5 if is_special_straight else values[-1])
     
-    #Two Pair
+    # Three of a Kind
+    if 3 in value_counts.values():
+        trio_value = next(k for k, v in value_counts.items() if v == 3)
+        return ("Three of a Kind", trio_value)
+    
+    # Two Pairs
     pair_values = [k for k, v in value_counts.items() if v == 2]
     if len(pair_values) == 2:
         return ("Two Pairs", tuple(sorted(pair_values, reverse=True)))
     
-    #One Pair
+    # One Pair
     if len(pair_values) == 1:
         return ("One Pair", pair_values[0])
     
-    #High Card
-    return("High Card", values[-1])
-
-def get_valid_bet(prompt):
-    while True:
-        user_input = input(prompt).strip().lower()
-
-        if user_input == 'check':
-            return 0
-        try:
-            bet = int(user_input)
-            if bet >= 0:
-                return bet
-            print("Please enter a positive number!")
-        except ValueError:
-            print("Please enter a valid number!")
+    # High Card
+    return ("High Card", values[-1])
 
 # hand = [ 
 #     Card('♥', 5),
